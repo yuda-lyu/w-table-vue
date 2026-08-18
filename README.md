@@ -61,12 +61,14 @@ export default {
 
 ### In a browser(UMD module):
 
-Add scripts for ag-grid(w-table-vue is based on w-aggrid-vue, ag-grid-vue and ag-grid-community can not be bundled, so they have to be loaded from cdn), xlsx(for download and upload Excel file) and w-table-vue.
+Add script for vue.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.4/dist/ag-grid-community.min.noStyle.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-vue@31.3.4/dist/ag-grid-vue.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/w-table-vue@1.0.0/dist/w-table-vue.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+```
+
+Add script for w-aggrid-vue, ag-grid-community and ag-grid-vue have been bundled into the umd file(css included), only vue is required.
+```alias
+<script src="https://cdn.jsdelivr.net/npm/w-table-vue@1.0.1/dist/w-table-vue.umd.js"></script>
 ```
 
 Directly use:

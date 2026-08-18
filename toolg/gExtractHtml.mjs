@@ -85,13 +85,6 @@ function writeHtml(v) {
         <link _href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
         <link _href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
 
-        <!-- xlsx, w-aggrid-vue的download與upload會使用 -->
-        <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-        <!-- ag-grid, ag-grid-vue無法被rollup編譯, 須由cdn引入, 且其依賴window.agGrid -->
-        <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.4/dist/ag-grid-community.min.noStyle.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/ag-grid-vue@31.3.4/dist/ag-grid-vue.umd.min.js"></script>
-
         <!-- w-table-vue -->
         <script src="../dist/w-table-vue.umd.js"></script>
     
