@@ -10,6 +10,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'default'"
                 ></demolink>
@@ -26,6 +27,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'name & description'"
                 ></demolink>
@@ -44,6 +46,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'no enableInfor'"
                 ></demolink>
@@ -63,6 +66,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'no enableMenu'"
                 ></demolink>
@@ -82,6 +86,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'opt.kpHead'"
                 ></demolink>
@@ -100,6 +105,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'sortColIds (sort by order)'"
                 ></demolink>
@@ -119,6 +125,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'hideIds (hide mappingId)'"
                 ></demolink>
@@ -139,6 +146,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'fixIds (fix id)'"
                 ></demolink>
@@ -159,6 +167,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'removeIdsWhenDownload (remove id, mappingId, order, isActive)'"
                 ></demolink>
@@ -178,6 +187,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'slot infor (name & description)'"
                 ></demolink>
@@ -207,6 +217,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'slot btns-left'"
                 ></demolink>
@@ -234,6 +245,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'slot btns-right'"
                 ></demolink>
@@ -261,6 +273,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable'"
                 ></demolink>
@@ -280,6 +293,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & no enableInfor'"
                 ></demolink>
@@ -300,6 +314,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & no enableMenu'"
                 ></demolink>
@@ -320,6 +335,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & inforPaddingStyle & menuBackgroundColor'"
                 ></demolink>
@@ -343,6 +359,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & checkId'"
                 ></demolink>
@@ -363,6 +380,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & opt.beforeAddRow'"
                 ></demolink>
@@ -382,6 +400,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & opt.kpConvertKeysWhenUploadData'"
                 ></demolink>
@@ -401,6 +420,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & opt.optForUploadData'"
                 ></demolink>
@@ -420,6 +440,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & language & textLabelDataName & textPlaceholderDataName & textLabelDataDescription & textPlaceholderDataDescription'"
                 ></demolink>
@@ -444,6 +465,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & language & checkId & tooltipAddRow & tooltipDeleteSelectedRows & tooltipDownloadExcelFile & tooltipDownloadExcelFileForDisplay & tooltipUploadExcelFile & uploadModeTitle & uploadModeTextForReplace & uploadModeTextForAppend'"
                 ></demolink>
@@ -473,6 +495,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & checkId & successMsgFromAddRow & errorMsgFromAddRow & errorMsgFromRemoveRow & errorMsgFromUploadEmptyData & errorMsgFromUploadData & successMsgFromDownloadData & errorMsgFromDownloadData'"
                 ></demolink>
@@ -501,6 +524,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & slot btns-right'"
                 ></demolink>
@@ -529,6 +553,7 @@
 
             <div class="bk">
                 <demolink
+                    :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
                     :casename="'editable & checkId & opt.modifyDataWhenSave & save(call cmp. method) & errorMsgFromNoName & errorMsgFromNoData'"
                 ></demolink>
@@ -561,7 +586,7 @@
 </template>
 
 <script>
-import demolink from './components/demolink.vue'
+import demolink from 'w-component-vue/src/components/demolink.vue'
 import WTableEdit from './components/WTableEdit.vue'
 
 
