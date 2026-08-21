@@ -1,11 +1,11 @@
 {
   "name": "w-table-vue",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/w-table-vue.umd.js",
   "dependencies": {
-    "w-aggrid-vue": "^2.0.72",
-    "w-component-vue": "^2.5.1",
-    "wsemi": "^1.8.78"
+    "w-aggrid-vue": "^2.0.73",
+    "w-component-vue": "^2.5.2",
+    "wsemi": "^1.8.79"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.8",
@@ -19,7 +19,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.10.0",
     "vue": "^2.7.16",
-    "w-package-tools": "^1.1.14"
+    "w-package-tools": "^1.1.15"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
