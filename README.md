@@ -68,7 +68,7 @@ Add script for vue.
 
 Add script for w-aggrid-vue, ag-grid-community and ag-grid-vue have been bundled into the umd file(css included), only vue is required.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-table-vue@1.0.9/dist/w-table-vue.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-table-vue@1.0.10/dist/w-table-vue.umd.js"></script>
 ```
 
 Directly use:
