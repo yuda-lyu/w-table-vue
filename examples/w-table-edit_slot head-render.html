@@ -103,7 +103,7 @@
             >w-table-edit</span>
         </div>
         <div class="bk">
-            <div class="item">slot infor (name &amp; description)</div>
+            <div class="item">slot head-render</div>
 
             <w-table-edit
                 style="width:600px; height:400px;"
@@ -113,21 +113,20 @@
                 @success="evSuccess"
                 @error="evError"
             >
-                <template v-slot:infor="{infor}">
-                    <div msg="外層有flex故添加一層div避免影響">
-                        <div style="display:flex; align-items:center;">
-                            <div style="color:#62f;">{{infor.name}}</div>
-                            <div
-                                style="margin-left:5px; padding:0px 7px; color:#fff; font-size:0.7rem; border-radius:30px; background:#f26;"
-                            >Agent</div>
-                            <div
-                                style="margin-left:5px; padding:0px 7px; color:#fff; font-size:0.7rem; border-radius:30px; background:#fa6;"
-                            >Dealer</div>
-                        </div>
-                        <div
-                            style="color:#888; font-size:0.7rem;"
-                        >[{{infor.description}}]</div>
-                    </div>
+                <template v-slot:head-render="props">
+                    <span v-if="props.key==='make'">
+                        <span style="color:#aaa;">生產製造商</span>
+                        <sup>{{ props.value }}</sup>
+                    </span>
+                    <span v-else-if="props.key==='model'">
+                        <span style="color:#2c6;">車款型號</span>
+                        <sup>{{ props.value }}</sup>
+                    </span>
+                    <span v-else-if="props.key==='price'">
+                        <span style="color:#f26;">虛擬販售價格</span>
+                        <sup>{{ props.value }}</sup>
+                    </span>
+                    <span v-else>{{ props.value }}</span>
                 </template>
             </w-table-edit>
         </div>
