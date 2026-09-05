@@ -103,14 +103,17 @@
             >w-table-edit</span>
         </div>
         <div class="bk">
-            <div class="item">editable</div>
+            <div
+                class="item"
+            >editable &amp; opt.kpCellFormat &amp; no useCellFormatWhenDownload</div>
 
             <w-table-edit
                 style="width:600px; height:400px;"
                 :name="WTableEdit.name"
                 :description="WTableEdit.description"
-                :opt="WTableEdit.opt2"
+                :opt="WTableEdit.opt8"
                 :editable="true"
+                :use-cell-format-when-download="false"
                 @success="evSuccess"
                 @error="evError"
             ></w-table-edit>

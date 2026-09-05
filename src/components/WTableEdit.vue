@@ -302,7 +302,8 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {String|Array} [removeIdsWhenDownload=''] 輸入下載Excel檔案時欲移除的欄位字串或陣列，預設''
  * @vue-prop {Boolean} [funGetLtdtHookWhenDownload=null] 輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，預設為null
  * @vue-prop {Boolean} [funGetMatHookWhenDownload=null] 輸入下載Excel檔案時針對mat數據階段的攔截處理函數，預設為null
- * @vue-prop {Boolean} [enableHeadWhenDownload=false] 輸入下載Excel檔案時是否將欄位鍵值轉換成head布林值，此需提供opt.kpHead物件，預設為false
+ * @vue-prop {Boolean} [useHeadWhenDownload=false] 輸入下載Excel檔案時是否將欄位鍵值轉換成head布林值，此需提供opt.kpHead物件，預設為false
+ * @vue-prop {Boolean} [useCellFormatWhenDownload=true] 輸入下載Excel檔案時是否依opt.kpCellFormat格式化各欄值布林值，true時下載內容與畫面一致(有格式化函數之欄為格式化後字串)，false時下載原值，無opt.kpCellFormat時無作用，對應w-aggrid-vue之downloadData與downloadDisplayData之useFormat，預設為true
  * @vue-prop {String} [fileNameWhenDownload='data.xlsx'] 輸入下載Excel檔案時儲存檔名稱字串，預設'data.xlsx'
  * @vue-prop {String} [sheetNameWhenDownload='data'] 輸入下載Excel檔案時sheet名稱字串，預設'data'
  * @vue-prop {Boolean} [editable=false] 輸入是否可編輯布林值，可被opt.defCellEditable複寫，預設為false
@@ -335,8 +336,8 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-slot {Object} infor 顯示模式下資訊區之渲染slot，slot props為{ infor }，infor為{ name, description }
  * @vue-slot {Object} btns-left 選單按鈕區最左側之插入slot，slot props為{ editable }
  * @vue-slot {Object} btns-right 選單按鈕區最右側之插入slot，slot props為{ editable }
- * @vue-slot {Object} cell-render 輸入cell之渲染slot，轉發至w-aggrid-vue，slot props為{ value, key, row }
- * @vue-slot {Object} cell-tooltip 輸入cell之tooltip渲染slot，轉發至w-aggrid-vue，slot props為{ value, key, row }，slot內容於掛載時取靜態HTML快照，不支援事件綁定、子組件狀態與響應式更新
+ * @vue-slot {Object} cell-render 輸入cell之渲染slot，轉發至w-aggrid-vue，slot props為{ value, valueFormatted, key, row }，value為原值，valueFormatted為該欄有opt.kpCellFormat時之格式化值，否則為undefined
+ * @vue-slot {Object} cell-tooltip 輸入cell之tooltip渲染slot，轉發至w-aggrid-vue，slot props為{ value, valueFormatted, key, row }，value為原值，valueFormatted為該欄有opt.kpCellFormat時之格式化值，否則為undefined，slot內容於掛載時取靜態HTML快照，不支援事件綁定、子組件狀態與響應式更新
  * @vue-slot {Object} head-render 輸入head之渲染slot，轉發至w-aggrid-vue，slot props為{ value, key }
  * @vue-slot {Object} head-tooltip 輸入head之tooltip渲染slot，轉發至w-aggrid-vue，slot props為{ value, key }，slot內容於掛載時取靜態HTML快照，不支援事件綁定、子組件狀態與響應式更新
  * @vue-prop {Object} [opt={}] 輸入w-aggrid-vue設定物件，預設{}
@@ -372,6 +373,7 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {Object} [opt.kpCellAlignH={}] 輸入key對應cell之左右對齊字串物件，預設各key值為defCellAlignH
  * @vue-prop {Boolean} [opt.defCellEditable=false] 輸入cell預設之是否可編輯布林值，由組件editable複寫，預設為false
  * @vue-prop {Object} [opt.kpCellEditable={}] 輸入key對應cell之是否可編輯物件，預設各key值為defCellEditable
+ * @vue-prop {Object} [opt.kpCellFormat={}] 輸入key對應cell之值格式化函數物件，函數簽名為(value, key, row, params)，回傳顯示字串，回傳null或undefined代表不格式化維持原值；所有原值(含null、undefined、空字串)皆原樣傳入，編輯模式新增列之各欄為空字串，故函數內須自行處理空值(如回傳null)；作用於顯示與下載(下載時params為null，可由組件useCellFormatWhenDownload關閉)，排序、過濾、編輯與save回傳之rows仍為原值；與cell-render slot可並用，預設各key值為undefined
  * @vue-prop {Object} [opt.kpConvertKeysWhenUploadData={}] 輸入上傳Excel檔案時，當key轉會成對應新key值物件，預設{}
  * @vue-prop {Function} [opt.rowsChange=function(){}] 輸入rows change之觸發事件，預設為function(){}
  * @vue-prop {Function} [opt.rowClick=function(){}] 輸入row click之觸發事件，預設為function(){}
@@ -489,9 +491,13 @@ export default {
             type: Function,
             default: null,
         },
-        enableHeadWhenDownload: {
+        useHeadWhenDownload: {
             type: Boolean,
             default: false,
+        },
+        useCellFormatWhenDownload: {
+            type: Boolean,
+            default: true,
         },
         fileNameWhenDownload: {
             type: String,
@@ -1133,7 +1139,8 @@ export default {
                     //     return mat
                     // },
                     funGetMatHook: vo.funGetMatHookWhenDownload,
-                    useHead: vo.enableHeadWhenDownload, //default: false
+                    useHead: vo.useHeadWhenDownload, //default: false
+                    useFormat: vo.useCellFormatWhenDownload, //default: true, 依opt.kpCellFormat格式化使下載與畫面一致
                     fileName: vo.fileNameWhenDownload, //default: 'data.xlsx'
                     sheetName: vo.sheetNameWhenDownload, //default: data
                 })
