@@ -565,6 +565,26 @@
                 <demolink
                     :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
+                    :casename="'editable & opt.optForUploadData.uploadMode (append, no popup)'"
+                ></demolink>
+
+                <w-table-edit
+                    style="width:600px; height:400px;"
+                    :name="WTableEdit.name"
+                    :description="WTableEdit.description"
+                    :opt="WTableEdit.opt9"
+                    :editable="true"
+                    @success="evSuccess"
+                    @error="evError"
+                ></w-table-edit>
+
+            </div>
+
+
+            <div class="bk">
+                <demolink
+                    :pkgname="'w-table-vue'"
+                    :kbname="'w-table-edit'"
                     :casename="'editable & language & textLabelDataName & textPlaceholderDataName & textLabelDataDescription & textPlaceholderDataDescription'"
                 ></demolink>
 
@@ -903,6 +923,14 @@ export default {
                             }
                             return Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                         },
+                    },
+                },
+                'opt9': {
+                    keys: keys1,
+                    kpHeadFilterType: kpHeadFilterType1,
+                    rows: rows1,
+                    optForUploadData: {
+                        uploadMode: 'append', //預先指定上傳模式, 點擊上傳按鈕時不顯示模式選擇彈窗, 直接開啟選檔視窗並附加於表格數據之後
                     },
                 },
             },

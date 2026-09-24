@@ -95,10 +95,12 @@
                                 v-if="isFilter && hasEffRows"
                             ></WButtonCircle>
 
+                            <!-- 呼叫端於opt.optForUploadData.uploadMode預先指定上傳模式時, 以editable停用模式選擇彈窗(WPopup點擊觸發區即會自行開啟), 由clickUpload直接開啟選檔視窗 -->
                             <WPopup
                                 v-model="showPickUploadMode"
                                 :labelContent="labelContentForUpload"
                                 :cmpZIndex="cmpZIndex"
+                                :editable="uploadModePreset===''"
                             >
 
                                 <template v-slot:trigger>
@@ -108,7 +110,7 @@
                                         :backgroundColor="'white'"
                                         :backgroundColorHover="'white'"
                                         :tooltip="tooltipUploadExcelFile"
-                                        @click="showPickUploadMode=true"
+                                        @click="clickUpload"
                                     ></WButtonCircle>
                                 </template>
 
@@ -321,18 +323,18 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {String} [errorMsgFromRemoveRow='can not remove selected rows'] 輸入移除數據失敗事件訊息字串，預設'can not remove selected rows'
  * @vue-prop {String} [successMsgFromUploadData='upload data successfully'] 輸入上傳數據成功事件訊息字串，預設'upload data successfully'
  * @vue-prop {String} [errorMsgFromUploadData='can not upload data'] 輸入無法上傳數據事件訊息字串，預設'can not upload data'
- * @vue-prop {String} [errorMsgFromUploadEmptyData='no effective data'] 輸入上傳檔案中無有效數據事件訊息字串，預設'no effective data'
+ * @vue-prop {String} [errorMsgFromUploadEmptyData='no effective data'] 輸入上傳檔案中無有效數據事件訊息字串，此時不變動表格數據，預設'no effective data'
  * @vue-prop {String} [successMsgFromDownloadData='download data successfully'] 輸入下載檔案成功事件訊息字串，預設'download data successfully'
  * @vue-prop {String} [errorMsgFromDownloadData='can not download data'] 輸入無法下載檔案事件訊息字串，預設'can not download data'
  * @vue-prop {String} [errorMsgFromNoName='no data name'] 輸入未輸入數據名稱事件訊息字串，預設'no data name'
  * @vue-prop {String} [errorMsgFromNoData='no data'] 輸入未給予有效數據事件訊息字串，預設'no data'
- * @vue-prop {String} [uploadModeTitle='Choose mode of upload:'] 輸入選擇上傳模式彈窗標題字串，預設'Choose mode of upload:'
+ * @vue-prop {String} [uploadModeTitle='Choose mode of upload:'] 輸入選擇上傳模式彈窗標題字串，opt.optForUploadData.uploadMode有預先指定時不顯示此彈窗，預設'Choose mode of upload:'
  * @vue-prop {String} [uploadModeTextForReplace='Replace'] 輸入取代上傳模式文字字串，預設'Replace'
  * @vue-prop {String} [uploadModeTextForAppend='Append'] 輸入插入於最後上傳模式文字字串，預設'Append'
  * @vue-prop {String} [labelContentForUpload=null] 輸入針對上傳模式之popup彈窗teleport至body內之內容div所給予之wtlp屬性值字串，供查找使用，預設null
  * @vue-event {Array} save 指調用組件的method，無輸入，會回傳當前的name、description、rows所構成的物件
  * @vue-event {String} success 當新增數據、上傳數據、下載數據成功時觸發，回傳對應成功訊息字串
- * @vue-event {String} error 當新增數據、移除數據、上傳數據、下載數據失敗時觸發，回傳對應錯誤訊息字串
+ * @vue-event {String} error 當新增數據、移除數據、上傳數據、下載數據失敗時觸發，回傳對應錯誤訊息字串；使用者於上傳選檔視窗取消時不觸發
  * @vue-slot {Object} infor 顯示模式下資訊區之渲染slot，slot props為{ infor }，infor為{ name, description }
  * @vue-slot {Object} btns-left 選單按鈕區最左側之插入slot，slot props為{ editable }
  * @vue-slot {Object} btns-right 選單按鈕區最右側之插入slot，slot props為{ editable }
@@ -391,7 +393,7 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {Boolean} [opt.autoFitColumn=false] 輸入當表格尺寸變更時自動調整欄寬布林值，預設false
  * @vue-prop {String} [opt.language='en'] 輸入指定語系字串，可選'en'、'zh-tw'、'zh-cn'，預設同組件language
  * @vue-prop {Function} [opt.beforeAddRow=undefined] 輸入編輯模式新增數據前之修改新列事件，輸入newRow，輸出newRow，預設為undefined
- * @vue-prop {Object} [opt.optForUploadData={}] 輸入呼叫組件uploadData上傳檔案時用的設定物件，內部調用wsemi的getDataFromExcelFileU8Arr讀取Excel檔案，物件可給予鍵值：uploadMode代表上傳模式字串(可選'replace'、'append'，預設由彈窗選擇)，beforeUpload代表上傳前的處理數據函數，parseSheetInd代表提取Excel檔案的第幾個sheet整數(預設為0)，optForUploadData預設{}
+ * @vue-prop {Object} [opt.optForUploadData={}] 輸入呼叫組件uploadData上傳檔案時用的設定物件，內部調用wsemi的getDataFromExcelFileU8Arr讀取Excel檔案，物件可給予鍵值：uploadMode代表上傳模式字串(可選'replace'、'append'，有給予時點擊上傳按鈕不顯示模式選擇彈窗而直接開啟選檔視窗，未給予或非前述值時由彈窗選擇)，beforeUpload代表上傳前的處理數據函數(輸入讀取所得之數據陣列，回傳處理後之數據陣列或Promise，未給予時自動去除於表格各欄位之值皆為空的無效數據，處理後無數據時觸發error事件(errorMsgFromUploadEmptyData)且不變動表格數據)，parseSheetInd代表提取Excel檔案的第幾個sheet整數(預設為0)，組件不會修改此物件，optForUploadData預設{}
  * @vue-prop {Function} [opt.modifyDataWhenSave=undefined] 輸入當儲存時修改儲存數據事件，輸入rows，輸出rows，預設為undefined
  * @vue-prop {Boolean} [opt.checkNoDataWhenSave=false] 輸入當儲存時是否檢核無數據布林值，預設false
  * @vue-prop {Number} [cmpZIndex=3000] 輸入彈窗使用z-index數字，供嵌於高z-index彈窗內時提高層級，預設3000
@@ -705,6 +707,20 @@ export default {
             }
 
             return kp
+        },
+
+        uploadModePreset: function() {
+            //console.log('computed uploadModePreset')
+
+            let vo = this
+
+            //uploadMode, 呼叫端於opt.optForUploadData.uploadMode預先指定之上傳模式, 僅接受'replace'與'append', 其餘視為未指定而由彈窗選擇
+            let uploadMode = get(vo, 'opt.optForUploadData.uploadMode', '')
+            if (uploadMode !== 'replace' && uploadMode !== 'append') {
+                uploadMode = ''
+            }
+
+            return uploadMode
         },
 
         useKeys: function() {
@@ -1153,6 +1169,22 @@ export default {
 
         },
 
+        clickUpload: function() {
+            //console.log('methods clickUpload')
+
+            let vo = this
+
+            //check, 呼叫端已預先指定上傳模式時, 模式選擇彈窗已由WPopup之editable停用, 直接開啟選檔視窗
+            if (vo.uploadModePreset !== '') {
+                vo.uploadData(vo.uploadModePreset)
+                return
+            }
+
+            //showPickUploadMode
+            vo.showPickUploadMode = true
+
+        },
+
         uploadData: function(uploadModeSelect) {
             //console.log('methods uploadData', uploadModeSelect)
 
@@ -1166,59 +1198,82 @@ export default {
                 return
             }
 
-            //optForUploadData
+            //optForUploadData, 淺拷貝後才寫入uploadMode與beforeUpload, 不可改寫呼叫端之opt.optForUploadData, 否則首次所選模式會被存入而使後續彈窗選擇失效
             let optForUploadData = get(vo, 'opt.optForUploadData')
             if (!isobj(optForUploadData)) {
                 optForUploadData = {}
             }
+            optForUploadData = { ...optForUploadData }
 
-            //uploadMode, 選擇上傳模式
-            let uploadMode = get(optForUploadData, 'uploadMode')
-            if (!isestr(uploadMode)) {
-                optForUploadData.uploadMode = uploadModeSelect
-            }
+            //uploadMode, 呼叫端有預先指定時使用之(此時不顯示模式選擇彈窗), 否則使用彈窗所選
+            optForUploadData.uploadMode = vo.uploadModePreset !== '' ? vo.uploadModePreset : uploadModeSelect
 
-            //beforeUpload, 自動去除無效數據
+            //errNoEffData, 無有效數據之錯誤物件, 於catch以參照比對, 不與w-aggrid-vue或呼叫端beforeUpload之錯誤混淆
+            let errNoEffData = { msg: 'no effective data' }
+
+            //beforeUpload, 包裝呼叫端之beforeUpload(未給予時使用預設之去除無效數據), 處理後無數據時reject, w-aggrid-vue會於寫入表格前中止, 故取代與附加模式皆不變動表格數據
             let beforeUpload = get(optForUploadData, 'beforeUpload')
-            if (!isfun(beforeUpload)) {
-                optForUploadData.beforeUpload = (rows) => {
-                    // console.log('beforeUpload', rows)
+            optForUploadData.beforeUpload = (rows) => {
+                // console.log('beforeUpload', rows)
+                return Promise.resolve()
+                    .then(() => {
 
-                    //calc eff rows
-                    let rs = []
-                    each(rows, (row) => {
-                        let b = every(row, (v) => {
-                            return v === ''
-                        })
-                        if (!b) {
-                            rs.push(row)
+                        //呼叫端beforeUpload
+                        if (isfun(beforeUpload)) {
+                            return beforeUpload(rows)
                         }
-                    })
-                    // console.log('rs', rs)
 
-                    return rs
-                }
+                        //calc eff rows, 各列於表格欄位(useKeys)之值皆為空者視為無效, 欄位與表格不符之列寫入後亦為空列故一併去除
+                        let rs = []
+                        each(rows, (row) => {
+                            let b = every(vo.useKeys, (k) => {
+                                let v = get(row, k)
+                                return v === '' || v === null || v === undefined
+                            })
+                            if (!b) {
+                                rs.push(row)
+                            }
+                        })
+                        // console.log('rs', rs)
+
+                        return rs
+                    })
+                    .then((rs) => {
+
+                        //check, 無有效數據
+                        if (!isearr(rs)) {
+                            return Promise.reject(errNoEffData)
+                        }
+
+                        return rs
+                    })
             }
             // console.log('optForUploadData', optForUploadData)
 
             //upload
             fun(optForUploadData)
-                .then((rows) => {
-                    // console.log('upload then', rows)
+                .then(() => {
 
-                    //check
-                    if (size(rows) === 0) {
-                        vo.$emit('error', vo.errorMsgFromUploadEmptyData)
-                    }
-                    else {
-                        vo.$emit('success', vo.successMsgFromUploadData)
-                    }
+                    //emit
+                    vo.$emit('success', vo.successMsgFromUploadData)
 
                     //reset rowsSelect
                     vo.rowsSelect = []
 
                 })
                 .catch((err) => {
+
+                    //check, 使用者於選檔視窗取消時w-aggrid-vue之uploadData以{ msg: 'no file' }reject, 屬正常操作, 靜默結束不觸發error事件
+                    if (get(err, 'msg') === 'no file') {
+                        return
+                    }
+
+                    //check, 無有效數據, 此時w-aggrid-vue尚未寫入, 表格數據未變動
+                    if (err === errNoEffData) {
+                        vo.$emit('error', vo.errorMsgFromUploadEmptyData)
+                        return
+                    }
+
                     console.log('catch', err)
                     vo.$emit('error', vo.errorMsgFromUploadData)
                 })
