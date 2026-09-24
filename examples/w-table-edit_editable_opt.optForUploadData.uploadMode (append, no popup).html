@@ -103,13 +103,15 @@
             >w-table-edit</span>
         </div>
         <div class="bk">
-            <div class="item">editable &amp; opt.optForUploadData</div>
+            <div
+                class="item"
+            >editable &amp; opt.optForUploadData.uploadMode (append, no popup)</div>
 
             <w-table-edit
                 style="width:600px; height:400px;"
                 :name="WTableEdit.name"
                 :description="WTableEdit.description"
-                :opt="WTableEdit.opt6"
+                :opt="WTableEdit.opt9"
                 :editable="true"
                 @success="evSuccess"
                 @error="evError"
