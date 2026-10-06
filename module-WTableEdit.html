@@ -152,16 +152,16 @@
         <td>輸入下載Excel檔案時欲移除的欄位字串或陣列，預設''</td>
     </tr><tr>
         <td><code>funGetLtdtHookWhenDownload</code></td>
-        <td>Boolean</td>
+        <td>function</td>
         <td><code>null</code></td>
         <td>No</td>
-        <td>輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，預設為null</td>
+        <td>輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，輸入為各列數據陣列，須同步回傳處理後之數據陣列(不支援Promise)，無數據列時輸入為空陣列，函數拋錯時觸發error事件且不產生檔案，預設為null</td>
     </tr><tr>
         <td><code>funGetMatHookWhenDownload</code></td>
-        <td>Boolean</td>
+        <td>function</td>
         <td><code>null</code></td>
         <td>No</td>
-        <td>輸入下載Excel檔案時針對mat數據階段的攔截處理函數，預設為null</td>
+        <td>輸入下載Excel檔案時針對mat數據階段的攔截處理函數，輸入為首列為表頭之二維陣列(已經funGetLtdtHookWhenDownload處理)，須同步回傳處理後之二維陣列(不支援Promise)，無數據列且funGetLtdtHookWhenDownload未加入數據時只含表頭1列，函數拋錯時觸發error事件且不產生檔案，預設為null</td>
     </tr><tr>
         <td><code>useHeadWhenDownload</code></td>
         <td>Boolean</td>
@@ -174,6 +174,12 @@
         <td><code>true</code></td>
         <td>No</td>
         <td>輸入下載Excel檔案時是否依opt.kpCellFormat格式化各欄值布林值，true時下載內容與畫面一致(有格式化函數之欄為格式化後字串)，false時下載原值，無opt.kpCellFormat時無作用，對應w-aggrid-vue之downloadData與downloadDisplayData之useFormat，預設為true</td>
+    </tr><tr>
+        <td><code>enableDownloadWhenNoRows</code></td>
+        <td>Boolean</td>
+        <td><code>false</code></td>
+        <td>No</td>
+        <td>輸入無數據列時是否仍顯示下載數據按鈕布林值，無數據列指表格主數據列為0列(opt.rows為空陣列或數據列已全部刪除，不含置頂置底列)，此時按下載只有表頭1列之Excel檔案，表頭依opt.keys之順序並套用removeIdsWhenDownload與useHeadWhenDownload，與有數據時所下載檔案之第1列相同，提示文字改用tooltipDownloadExcelFileForHead；只影響下載數據按鈕，不影響下載過濾後數據按鈕；編輯與顯示模式皆適用，若僅欲於編輯模式顯示可綁定:enableDownloadWhenNoRows="editable"；需提供opt.keys；若useHeadWhenDownload為true且欲將填寫後之檔案上傳回來，須以opt.kpConvertKeysWhenUploadData將表頭名稱對回欄位鍵值，且opt.kpHead之名稱須非空且不重複；預設為false</td>
     </tr><tr>
         <td><code>fileNameWhenDownload</code></td>
         <td>String</td>
@@ -240,6 +246,12 @@
         <td><code>'download filtered data to Excel file'</code></td>
         <td>No</td>
         <td>輸入下載過濾後數據成為Excel檔案按鈕tooltip字串，預設'download filtered data to Excel file'</td>
+    </tr><tr>
+        <td><code>tooltipDownloadExcelFileForHead</code></td>
+        <td>String</td>
+        <td><code>'download headers to Excel file'</code></td>
+        <td>No</td>
+        <td>輸入無數據列時下載數據按鈕(此時只下載表頭)之tooltip字串，需enableDownloadWhenNoRows為true才會使用，給予空字串則不顯示tooltip，已自訂tooltipDownloadExcelFile語系之呼叫端應一併給予，預設'download headers to Excel file'</td>
     </tr><tr>
         <td><code>tooltipUploadExcelFile</code></td>
         <td>String</td>
@@ -802,16 +814,16 @@
         <td>輸入下載Excel檔案時欲移除的欄位字串或陣列，預設''</td>
     </tr><tr>
         <td><code>funGetLtdtHookWhenDownload</code></td>
-        <td>Boolean</td>
+        <td>function</td>
         <td><code>null</code></td>
         <td>No</td>
-        <td>輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，預設為null</td>
+        <td>輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，輸入為各列數據陣列，須同步回傳處理後之數據陣列(不支援Promise)，無數據列時輸入為空陣列，函數拋錯時觸發error事件且不產生檔案，預設為null</td>
     </tr><tr>
         <td><code>funGetMatHookWhenDownload</code></td>
-        <td>Boolean</td>
+        <td>function</td>
         <td><code>null</code></td>
         <td>No</td>
-        <td>輸入下載Excel檔案時針對mat數據階段的攔截處理函數，預設為null</td>
+        <td>輸入下載Excel檔案時針對mat數據階段的攔截處理函數，輸入為首列為表頭之二維陣列(已經funGetLtdtHookWhenDownload處理)，須同步回傳處理後之二維陣列(不支援Promise)，無數據列且funGetLtdtHookWhenDownload未加入數據時只含表頭1列，函數拋錯時觸發error事件且不產生檔案，預設為null</td>
     </tr><tr>
         <td><code>useHeadWhenDownload</code></td>
         <td>Boolean</td>
@@ -824,6 +836,12 @@
         <td><code>true</code></td>
         <td>No</td>
         <td>輸入下載Excel檔案時是否依opt.kpCellFormat格式化各欄值布林值，true時下載內容與畫面一致(有格式化函數之欄為格式化後字串)，false時下載原值，無opt.kpCellFormat時無作用，對應w-aggrid-vue之downloadData與downloadDisplayData之useFormat，預設為true</td>
+    </tr><tr>
+        <td><code>enableDownloadWhenNoRows</code></td>
+        <td>Boolean</td>
+        <td><code>false</code></td>
+        <td>No</td>
+        <td>輸入無數據列時是否仍顯示下載數據按鈕布林值，無數據列指表格主數據列為0列(opt.rows為空陣列或數據列已全部刪除，不含置頂置底列)，此時按下載只有表頭1列之Excel檔案，表頭依opt.keys之順序並套用removeIdsWhenDownload與useHeadWhenDownload，與有數據時所下載檔案之第1列相同，提示文字改用tooltipDownloadExcelFileForHead；只影響下載數據按鈕，不影響下載過濾後數據按鈕；編輯與顯示模式皆適用，若僅欲於編輯模式顯示可綁定:enableDownloadWhenNoRows="editable"；需提供opt.keys；若useHeadWhenDownload為true且欲將填寫後之檔案上傳回來，須以opt.kpConvertKeysWhenUploadData將表頭名稱對回欄位鍵值，且opt.kpHead之名稱須非空且不重複；預設為false</td>
     </tr><tr>
         <td><code>fileNameWhenDownload</code></td>
         <td>String</td>
@@ -890,6 +908,12 @@
         <td><code>'download filtered data to Excel file'</code></td>
         <td>No</td>
         <td>輸入下載過濾後數據成為Excel檔案按鈕tooltip字串，預設'download filtered data to Excel file'</td>
+    </tr><tr>
+        <td><code>tooltipDownloadExcelFileForHead</code></td>
+        <td>String</td>
+        <td><code>'download headers to Excel file'</code></td>
+        <td>No</td>
+        <td>輸入無數據列時下載數據按鈕(此時只下載表頭)之tooltip字串，需enableDownloadWhenNoRows為true才會使用，給予空字串則不顯示tooltip，已自訂tooltipDownloadExcelFile語系之呼叫端應一併給予，預設'download headers to Excel file'</td>
     </tr><tr>
         <td><code>tooltipUploadExcelFile</code></td>
         <td>String</td>
@@ -1449,7 +1473,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Fri Oct 02 2026 20:39:37 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Tue Oct 06 2026 15:13:03 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
