@@ -585,6 +585,29 @@
                 <demolink
                     :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
+                    :casename="'editable & enableDownloadWhenNoRows & tooltipDownloadExcelFileForHead & useHeadWhenDownload & opt.kpConvertKeysWhenUploadData'"
+                ></demolink>
+
+                <w-table-edit
+                    style="width:600px; height:400px;"
+                    :name="WTableEdit.name"
+                    :description="WTableEdit.description"
+                    :opt="WTableEdit.opt10"
+                    :editable="true"
+                    :enableDownloadWhenNoRows="true"
+                    :tooltipDownloadExcelFileForHead="'下載表頭範本'"
+                    :useHeadWhenDownload="true"
+                    @success="evSuccess"
+                    @error="evError"
+                ></w-table-edit>
+
+            </div>
+
+
+            <div class="bk">
+                <demolink
+                    :pkgname="'w-table-vue'"
+                    :kbname="'w-table-edit'"
                     :casename="'editable & language & textLabelDataName & textPlaceholderDataName & textLabelDataDescription & textPlaceholderDataDescription'"
                 ></demolink>
 
@@ -932,6 +955,21 @@ export default {
                     optForUploadData: {
                         uploadMode: 'append', //預先指定上傳模式, 點擊上傳按鈕時不顯示模式選擇彈窗, 直接開啟選檔視窗並附加於表格數據之後
                     },
+                },
+                'opt10': {
+                    keys: keys1,
+                    kpHeadFilterType: kpHeadFilterType1,
+                    kpHead: { //表頭名稱須非空且不重複, 才能由kpConvertKeysWhenUploadData對回欄位鍵值
+                        make: '製造商',
+                        model: '型號',
+                        price: '價格',
+                    },
+                    kpConvertKeysWhenUploadData: { //kpHead之反向對照, 使下載之表頭範本填寫後可上傳回來
+                        '製造商': 'make',
+                        '型號': 'model',
+                        '價格': 'price',
+                    },
+                    rows: [], //無數據列, 開啟enableDownloadWhenNoRows時仍可下載只有表頭之Excel檔案
                 },
             },
             'actions': [

@@ -80,9 +80,9 @@
                                 :icon="mdiDownload"
                                 :backgroundColor="'white'"
                                 :backgroundColorHover="'white'"
-                                :tooltip="tooltipDownloadExcelFile"
+                                :tooltip="useTooltipDownloadExcelFile"
                                 @click="downloadData('raw')"
-                                v-if="hasEffRows"
+                                v-if="hasBtnDownloadRaw"
                             ></WButtonCircle>
 
                             <WButtonCircle
@@ -92,7 +92,7 @@
                                 :backgroundColorHover="'white'"
                                 :tooltip="tooltipDownloadExcelFileForDisplay"
                                 @click="downloadData('display')"
-                                v-if="isFilter && hasEffRows"
+                                v-if="hasBtnDownloadDisplay"
                             ></WButtonCircle>
 
                             <!-- 呼叫端於opt.optForUploadData.uploadMode預先指定上傳模式時, 以editable停用模式選擇彈窗(WPopup點擊觸發區即會自行開啟), 由clickUpload直接開啟選檔視窗 -->
@@ -173,11 +173,11 @@
                                 <WButtonCircle
                                     style="margin:5px;"
                                     :icon="mdiDownload"
-                                    :tooltip="tooltipDownloadExcelFile"
+                                    :tooltip="useTooltipDownloadExcelFile"
                                     :backgroundColor="'white'"
                                     :backgroundColorHover="'white'"
                                     @click="downloadData('raw')"
-                                    v-if="hasEffRows"
+                                    v-if="hasBtnDownloadRaw"
                                 ></WButtonCircle>
 
                                 <WButtonCircle
@@ -187,7 +187,7 @@
                                     :backgroundColor="'white'"
                                     :backgroundColorHover="'white'"
                                     @click="downloadData('display')"
-                                    v-if="isFilter && hasEffRows"
+                                    v-if="hasBtnDownloadDisplay"
                                 ></WButtonCircle>
 
                                 <slot
@@ -302,10 +302,11 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {String|Array} [fixIds=''] 輸入欲固定於左側欄位字串或陣列，可被opt.kpHeadFixLeft複寫，預設''
  * @vue-prop {String} [checkId=''] 輸入欲使用核選方塊欄位字串，可被opt.kpHeadCheckBox複寫，預設''
  * @vue-prop {String|Array} [removeIdsWhenDownload=''] 輸入下載Excel檔案時欲移除的欄位字串或陣列，預設''
- * @vue-prop {Boolean} [funGetLtdtHookWhenDownload=null] 輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，預設為null
- * @vue-prop {Boolean} [funGetMatHookWhenDownload=null] 輸入下載Excel檔案時針對mat數據階段的攔截處理函數，預設為null
+ * @vue-prop {Function} [funGetLtdtHookWhenDownload=null] 輸入下載Excel檔案時針對ltdt數據階段的攔截處理函數，輸入為各列數據陣列，須同步回傳處理後之數據陣列(不支援Promise)，無數據列時輸入為空陣列，函數拋錯時觸發error事件且不產生檔案，預設為null
+ * @vue-prop {Function} [funGetMatHookWhenDownload=null] 輸入下載Excel檔案時針對mat數據階段的攔截處理函數，輸入為首列為表頭之二維陣列(已經funGetLtdtHookWhenDownload處理)，須同步回傳處理後之二維陣列(不支援Promise)，無數據列且funGetLtdtHookWhenDownload未加入數據時只含表頭1列，函數拋錯時觸發error事件且不產生檔案，預設為null
  * @vue-prop {Boolean} [useHeadWhenDownload=false] 輸入下載Excel檔案時是否將欄位鍵值轉換成head布林值，此需提供opt.kpHead物件，預設為false
  * @vue-prop {Boolean} [useCellFormatWhenDownload=true] 輸入下載Excel檔案時是否依opt.kpCellFormat格式化各欄值布林值，true時下載內容與畫面一致(有格式化函數之欄為格式化後字串)，false時下載原值，無opt.kpCellFormat時無作用，對應w-aggrid-vue之downloadData與downloadDisplayData之useFormat，預設為true
+ * @vue-prop {Boolean} [enableDownloadWhenNoRows=false] 輸入無數據列時是否仍顯示下載數據按鈕布林值，無數據列指表格主數據列為0列(opt.rows為空陣列或數據列已全部刪除，不含置頂置底列)，此時按下載只有表頭1列之Excel檔案，表頭依opt.keys之順序並套用removeIdsWhenDownload與useHeadWhenDownload，與有數據時所下載檔案之第1列相同，提示文字改用tooltipDownloadExcelFileForHead；只影響下載數據按鈕，不影響下載過濾後數據按鈕；編輯與顯示模式皆適用，若僅欲於編輯模式顯示可綁定:enableDownloadWhenNoRows="editable"；需提供opt.keys；若useHeadWhenDownload為true且欲將填寫後之檔案上傳回來，須以opt.kpConvertKeysWhenUploadData將表頭名稱對回欄位鍵值，且opt.kpHead之名稱須非空且不重複；預設為false
  * @vue-prop {String} [fileNameWhenDownload='data.xlsx'] 輸入下載Excel檔案時儲存檔名稱字串，預設'data.xlsx'
  * @vue-prop {String} [sheetNameWhenDownload='data'] 輸入下載Excel檔案時sheet名稱字串，預設'data'
  * @vue-prop {Boolean} [editable=false] 輸入是否可編輯布林值，可被opt.defCellEditable複寫，預設為false
@@ -317,6 +318,7 @@ import WAggridVue from 'w-aggrid-vue/src/components/WAggridVue.vue'
  * @vue-prop {String} [tooltipDeleteSelectedRows='delete selected rows'] 輸入刪除選擇數據按鈕tooltip字串，預設'delete selected rows'
  * @vue-prop {String} [tooltipDownloadExcelFile='download data to Excel file'] 輸入下載數據成為Excel檔案按鈕tooltip字串，預設'download data to Excel file'
  * @vue-prop {String} [tooltipDownloadExcelFileForDisplay='download filtered data to Excel file'] 輸入下載過濾後數據成為Excel檔案按鈕tooltip字串，預設'download filtered data to Excel file'
+ * @vue-prop {String} [tooltipDownloadExcelFileForHead='download headers to Excel file'] 輸入無數據列時下載數據按鈕(此時只下載表頭)之tooltip字串，需enableDownloadWhenNoRows為true才會使用，給予空字串則不顯示tooltip，已自訂tooltipDownloadExcelFile語系之呼叫端應一併給予，預設'download headers to Excel file'
  * @vue-prop {String} [tooltipUploadExcelFile='upload data to Excel file'] 輸入上傳Excel數據檔案按鈕tooltip字串，預設'upload data to Excel file'
  * @vue-prop {String} [successMsgFromAddRow='add row successfully'] 輸入新增數據成功事件訊息字串，預設'add row successfully'
  * @vue-prop {String} [errorMsgFromAddRow='can not add row'] 輸入無法新增數據事件訊息字串，預設'can not add row'
@@ -501,6 +503,10 @@ export default {
             type: Boolean,
             default: true,
         },
+        enableDownloadWhenNoRows: {
+            type: Boolean,
+            default: false,
+        },
         fileNameWhenDownload: {
             type: String,
             default: 'data.xlsx',
@@ -544,6 +550,10 @@ export default {
         tooltipDownloadExcelFileForDisplay: {
             type: String,
             default: 'download filtered data to Excel file', //下載過濾後數據成為Excel檔案
+        },
+        tooltipDownloadExcelFileForHead: {
+            type: String,
+            default: 'download headers to Excel file', //下載表頭成為Excel檔案
         },
         tooltipUploadExcelFile: {
             type: String,
@@ -627,6 +637,7 @@ export default {
             showPickUploadMode: false,
 
             paramsTemp: null,
+            kpHeadTemp: null,
 
             nameTrans: '',
             descriptionTrans: '',
@@ -676,9 +687,15 @@ export default {
             let checkId = vo.checkId
             let editable = vo.editable
 
+            //optKeys, 換表時(例如由空表換成另一張空表)rows可能深度相等, 須另比對keys才會重建, 否則欄位與表頭沿用前表
+            let optKeys = get(vo, 'opt.keys')
+
+            //optKpHead, 僅表頭名稱變更時不重建(重建會以opt.rows覆蓋編輯中之增刪), 改於下方只更新useOpt.kpHead
+            let optKpHead = get(vo, 'opt.kpHead')
+
             //paramsTemp
             let paramsTemp = {
-                rows, hideIds, fixIds, checkId, editable
+                rows, hideIds, fixIds, checkId, editable, optKeys
             }
 
             //check, changeParamsForTable掛在dom上, 可能因為dom變更而被觸發, 或因數據為物件(例如rows)可能被修改, 於dom變更時被視為有變而觸發, 故需添加偵測外部數據是否有變才呼叫genOpt
@@ -689,6 +706,18 @@ export default {
 
                 //save
                 vo.paramsTemp = cloneDeep(paramsTemp)
+                vo.kpHeadTemp = cloneDeep(optKpHead)
+
+            }
+            else if (!isEqual(vo.kpHeadTemp, optKpHead)) {
+
+                //kpHead, 僅表頭名稱變更, 只更新useOpt.kpHead(w-aggrid-vue之changeParam會偵測而重建欄位), 不重建數據列
+                if (vo.useOpt !== null) {
+                    vo.useOpt.kpHead = vo.useKpHead
+                }
+
+                //save
+                vo.kpHeadTemp = cloneDeep(optKpHead)
 
             }
 
@@ -766,6 +795,36 @@ export default {
             let vo = this
 
             return size(get(vo, 'useOpt.rows', [])) > 0
+        },
+
+        hasBtnDownloadRaw: function() {
+            //console.log('computed hasBtnDownloadRaw')
+
+            let vo = this
+
+            //下載數據按鈕, 有數據列時顯示; 無數據列時若enableDownloadWhenNoRows為true亦顯示, 此時下載只有表頭1列之Excel檔案
+            return vo.hasEffRows || vo.enableDownloadWhenNoRows
+        },
+
+        hasBtnDownloadDisplay: function() {
+            //console.log('computed hasBtnDownloadDisplay')
+
+            let vo = this
+
+            //下載過濾後數據按鈕, 過濾中且有數據列時顯示, 不受enableDownloadWhenNoRows影響
+            return vo.isFilter && vo.hasEffRows
+        },
+
+        useTooltipDownloadExcelFile: function() {
+            //console.log('computed useTooltipDownloadExcelFile')
+
+            let vo = this
+
+            //無數據列時下載數據按鈕實際只下載表頭, 故改用表頭版提示文字
+            if (vo.hasEffRows) {
+                return vo.tooltipDownloadExcelFile
+            }
+            return vo.tooltipDownloadExcelFileForHead
         },
 
         hasEffUseOpt: function() {
@@ -994,7 +1053,8 @@ export default {
             if (iseobj(vo.opt)) {
                 let optTemp = cloneDeep(vo.opt)
                 each(optTemp, (v, k) => {
-                    if (k !== 'keys' && k !== 'rows' && k !== 'kpHead' && k !== 'editable') { //已於前面使用過就不複寫, 例如rows會被重排序一定不能被複寫回原數據
+                    //rowChecked與filterChange亦不複寫, 前面之包裝函數會更新rowsSelect與isFilter後再呼叫呼叫端之回呼, 若被複寫則刪除鈕與下載過濾後數據鈕無法出現
+                    if (k !== 'keys' && k !== 'rows' && k !== 'kpHead' && k !== 'editable' && k !== 'rowChecked' && k !== 'filterChange') { //已於前面使用過就不複寫, 例如rows會被重排序一定不能被複寫回原數據
                         useOpt[k] = v
                     }
                 })

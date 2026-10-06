@@ -103,38 +103,22 @@
             >w-table-edit</span>
         </div>
         <div class="bk">
-            <div class="item">slot head-tooltip</div>
+            <div
+                class="item"
+            >editable &amp; enableDownloadWhenNoRows &amp; tooltipDownloadExcelFileForHead &amp; useHeadWhenDownload &amp; opt.kpConvertKeysWhenUploadData</div>
 
             <w-table-edit
                 style="width:600px; height:400px;"
                 :name="WTableEdit.name"
                 :description="WTableEdit.description"
-                :opt="WTableEdit.opt1"
+                :opt="WTableEdit.opt10"
+                :editable="true"
+                :enable-download-when-no-rows="true"
+                :tooltip-download-excel-file-for-head="'下載表頭範本'"
+                :use-head-when-download="true"
                 @success="evSuccess"
                 @error="evError"
-            >
-                <template v-slot:head-tooltip="props">
-                    <div v-if="props.key==='make'">
-                        <div
-                            style="font-size:8pt; font-weight:bold; color:#6fe;"
-                        >[{{ props.value }}]</div>
-                        <div>生產製造商</div>
-                    </div>
-                    <div v-else-if="props.key==='model'">
-                        <div
-                            style="font-size:8pt; font-weight:bold; color:#6fe;"
-                        >[{{ props.value }}]</div>
-                        <div>車款型號</div>
-                    </div>
-                    <div v-else-if="props.key==='price'">
-                        <div
-                            style="font-size:8pt; font-weight:bold; color:#6fe;"
-                        >[{{ props.value }}]</div>
-                        <div>虛擬販售價格</div>
-                    </div>
-                    <div v-else>{{ props.value }}</div>
-                </template>
-            </w-table-edit>
+            ></w-table-edit>
         </div>
     </div>
 
