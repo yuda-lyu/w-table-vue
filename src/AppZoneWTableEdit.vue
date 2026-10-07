@@ -585,7 +585,7 @@
                 <demolink
                     :pkgname="'w-table-vue'"
                     :kbname="'w-table-edit'"
-                    :casename="'editable & enableDownloadWhenNoRows & tooltipDownloadExcelFileForHead & useHeadWhenDownload & opt.kpConvertKeysWhenUploadData'"
+                    :casename="'editable & tooltipDownloadExcelFileForHead (empty rows, download headers) & useHeadWhenDownload & opt.kpConvertKeysWhenUploadData'"
                 ></demolink>
 
                 <w-table-edit
@@ -594,7 +594,6 @@
                     :description="WTableEdit.description"
                     :opt="WTableEdit.opt10"
                     :editable="true"
-                    :enableDownloadWhenNoRows="true"
                     :tooltipDownloadExcelFileForHead="'下載表頭範本'"
                     :useHeadWhenDownload="true"
                     @success="evSuccess"
@@ -969,7 +968,7 @@ export default {
                         '型號': 'model',
                         '價格': 'price',
                     },
-                    rows: [], //無數據列, 開啟enableDownloadWhenNoRows時仍可下載只有表頭之Excel檔案
+                    rows: [], //無數據列時下載數據按鈕仍會顯示, 可下載只有表頭之Excel檔案供填寫後上傳
                 },
             },
             'actions': [
