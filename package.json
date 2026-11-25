@@ -1,11 +1,11 @@
 {
   "name": "w-table-vue",
-  "version": "1.0.63",
+  "version": "1.0.64",
   "main": "dist/w-table-vue.umd.js",
   "dependencies": {
-    "w-aggrid-vue": "^2.1.52",
-    "w-component-vue": "^2.5.72",
-    "wsemi": "^1.9.77"
+    "w-aggrid-vue": "^2.1.53",
+    "w-component-vue": "^2.5.73",
+    "wsemi": "^1.9.78"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.8",
