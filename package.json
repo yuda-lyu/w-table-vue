@@ -1,9 +1,9 @@
 {
   "name": "w-table-vue",
-  "version": "1.0.66",
+  "version": "1.0.67",
   "main": "dist/w-table-vue.umd.js",
   "dependencies": {
-    "w-aggrid-vue": "^2.1.55",
+    "w-aggrid-vue": "^2.1.56",
     "w-component-vue": "^2.5.75",
     "wsemi": "^1.9.79"
   },
